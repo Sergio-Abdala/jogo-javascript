@@ -30,19 +30,13 @@ function Player(imgSrc, col, lin, flag){
 		this.grLin = 0;
 		this.nFrames = 1;
 		this.txFrequencia = 10;
-		//this.taxaCresX = this.taxaCresY = this.taxaAumenX = this.taxaDimX = this.taxaAumenY = this.taxaDimY = 0;
-		//this.acima = false;
 		this.exibir = true;
-		//this.deslocaY = 0;
-		//this.deslocaX = 0;
 		this.id = null;
-		//this.etc = null;
-		//this.irX = null;
-		//this.irY = null;
 		this.metaHorizontal = null;
 		this.metaVertical = null;
 		this.gpsX = null;
 		this.gpsY = null;
+		this.fase = 'world';//default
 	//metodos
 	this.desenha = function(){
 		if (this.exibir) {
@@ -60,7 +54,7 @@ function Player(imgSrc, col, lin, flag){
             let porcentPlayerY = this.meioy() / cnv.height;
                 let difX = porcentMouseX - porcentPlayerX;
                 let difY = porcentMouseY - porcentPlayerY;
-                if (memoSprite !== 'ceu') {
+                if (sprites[achar('player')].fase !== 'ceu') {
                     this.metaHorizontal = (6 * -1) + parseInt(cnv.width * difX + this.posX + sprites[encontrar('background')].srcX) + this.lar/2;
                     this.metaVertical = (6 * -1) + parseInt(cnv.height * difY + this.posY + sprites[encontrar('background')].srcY) + this.alt/2;
 

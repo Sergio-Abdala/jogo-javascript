@@ -1,14 +1,13 @@
 //GLOBAIS
-	var socket = io('http://localhost:3000')
-	//var jogadoresOnline = [];
-	var debug = false;	
+	var socket = io('http://localhost:3000')//https://3000-fb005aa7-c2b8-4f4b-b1dc-44404c0579ce.ws-us02.gitpod.io/
+	var debug = false;
 	var pause = false;
 	var contLoop = 0;
 	var contImg = 0;
 	var sprites = world = new Array();//dava aqui o bug dessa merda... descrever melhor a bosta que deu aqui...
 	var ceu = new Array();
 	var contCeu = 0;
-	var player = jogo = null;
+	var player = null;
 	var mapa = new Array();
 	var fase01 = new Array();
 	var telaX = 1000;
@@ -20,7 +19,7 @@
 	var lider = lider01 = null;
 	var variacao = 0;
 	var iaX = iaY = iaLar = null;
-	var memoSprite = 'world';
+	//var memoSprite = 'world';
 	var objSpr = gpMorena = gpLoira = null;
 //************************************************************
 function start(){//carregou a pagina web...
@@ -392,32 +391,6 @@ function start(){//carregou a pagina web...
 					ceu.push(objOvni);
 					contCeu++;
 				}
-		//
-		/*/teste
-		let teste = new Personagem('img/gp01.png', 3, 4, 'npc');
-			teste.id = 'teste';
-			teste.esc = .75;
-			teste.speed = 1;//sempre numero inteiro implementar isto
-			teste.worldX = 600;
-			teste.worldY = 400;
-			teste.metaHorizontal = 400;//null
-			teste.metaVertical = 500;//null
-			teste.nFrames = 3;
-			teste.txFrequencia = 15;
-			teste.direcao = 2;
-			teste.status = '';
-			teste.exibir = true;
-			teste.img.onload = function(){
-				//esta medida so pode ser setada depois da imagem carregada............
-					teste.lar = (teste.img.width / teste.col) * teste.esc;
-					teste.alt = teste.img.height / teste.lin * teste.esc;
-					//teste.metaHorizontal += teste.lar/2;//-18?? metade lar
-					//teste.metaVertical += teste.alt/2;//-27?? metade alt
-				world.push(teste);
-				contImg++;//ñ conta por que ñ vai para o array de world
-			}
-			/////////////////////////////////////////////////////////////////////
-		/*/
 		//botões na tela
 			let btn = new Personagem('img/worldIcone.png', 1, 1, 'txt');
 			btn.status = 'fixo';
@@ -425,7 +398,7 @@ function start(){//carregou a pagina web...
 			btn.etc = 'up-right';
 			btn.posY = 0;
 			btn.exibir = true;
-			btn.esc = .1
+			btn.esc = .1;
 			btn.img.onload = function(){
 				//esta medida so pode ser setada depois da imagem carregada............
 				btn.lar = (btn.img.width / btn.col) * btn.esc;
@@ -442,7 +415,7 @@ function start(){//carregou a pagina web...
 			btn2.etc = 'up-right';
 			btn2.posY = 0;
 			btn2.exibir = true;
-			btn2.esc = .1
+			btn2.esc = .1;
 			btn2.img.onload = function(){
 				//esta medida so pode ser setada depois da imagem carregada............
 				btn2.lar = (btn2.img.width / btn2.col) * btn2.esc;
@@ -468,6 +441,15 @@ function start(){//carregou a pagina web...
 	//*************************************************************************************
 	//fase 1 ******************************************************************************
 		//
+		fase01.push(new Personagem('img/background2.jpg', 1, 1, 'background'));
+		fase01[0].status = 'game';
+		fase01[0].id = 'fase01';
+		fase01[0].img.onload = function(){
+			//esta medida so pode ser setada depois da imagem carregada............
+			fase01[0].lar = (fase01[0].img.width / fase01[0].col) * fase01[0].esc;
+			fase01[0].alt = (fase01[0].img.height / fase01[0].lin) * fase01[0].esc;				
+		}
+		fase01.push(player);
 	//*************************************************************************************
 
 	loading();
@@ -488,7 +470,7 @@ function organizarSprites () {
 	//organizar array / pilha de sprites...
 	let troca = false;
 	do{//txt
-		troca = false;				
+		troca = false;			
 		for (let i = sprites.length - 2; i >= 0; i--){
 			//teste logico para piso / chão.......
 			if (sprites[i].id !== 'world' && sprites[i].id !== 'piso' && sprites[i+1].flag == 'piso') {
@@ -871,7 +853,7 @@ function predio01(x, y, tamanhoPorta){
 				objSpr.worldY = world[memoIndex].worldY;//150;//objSpr.srcY;
 				objSpr.acima = false;
 				objSpr.id = 'porta';
-				objSpr.txt = 'porta do predio azul';
+				objSpr.txt = 'predio azul 01';
 				//
 				memoIndexx = memoIndex;
 				world.push(objSpr);//limite acima da porta
@@ -1340,12 +1322,15 @@ function achar(flag, status){
 function loop(){
 	// limpar tela
 	ctx.clearRect(0,0,cnv.width,cnv.height);
-	if (memoSprite == 'world') {
+	if (sprites[achar('player')].fase == 'world') {
 		sprites = world;
 	}
-	if (memoSprite == 'ceu') {
+	if (sprites[achar('player')].fase == 'ceu') {
 		sprites = ceu;
-	}	
+	}
+	if (sprites[achar('player')].fase == 'fase01') {
+		sprites = fase01;
+	}
 	for (let i = 0 ; i < sprites.length; i++) {//percorre array de sprites
 		
 		if(sprites[i].flag == 'player'){
@@ -1365,7 +1350,7 @@ function loop(){
 }
 function alternarMapa(){//quando aciona tecla muda status do background
 	if (sprites[encontrar('background')].status == 'mapa') {//muda para tela de jogo
-		memoSprite = 'world';
+		sprites[achar('player')].fase = 'world';
 				metaWidth = telaX;
 				metaHeight = telaY;				
 				sprites[encontrar('background')].taxaDimX = 64;
@@ -1373,7 +1358,7 @@ function alternarMapa(){//quando aciona tecla muda status do background
 
 				sprites[encontrar('background')].status = '';
 	}else{//mostra todo mapa saindo da tela de jogo...
-		memoSprite = 'ceu';
+		sprites[achar('player')].fase = 'ceu';
 		
 		metaWidth = sprites[encontrar('background')].img.width;//tamanho da tela exibida
 		metaHeight = sprites[encontrar('background')].img.height;
@@ -1398,54 +1383,59 @@ socket.on('id', id => {
 })
 socket.on('player', obj => {
 	obj.flag = 'player-online';
-	obj.id = socket.id;
+	//obj.id = socket.id;
 	//console.log(obj);
 	let achou = false;
 	for (let i = 0 ; i < sprites.length; i++) {//percorre array de sprites
-		if(sprites[i].id == socket.id){
-			console.log('jogador online: '+ obj.gpsX +' , '+obj.gpsY);
-			//let playerOnline = new Npc('img/players.png', 12, 8, 'player');
-			sprites[i].acima = true;
-			sprites[i].alt = obj.alt;
-			sprites[i].col = obj.col;
-			sprites[i].direcao = obj.direcao;
-			sprites[i].esc = obj.esc;
-			sprites[i].exibir = obj.exibir;
-			sprites[i].flag = obj.flag;
-			sprites[i].fr = obj.fr;
-			sprites[i].frame = obj.frame;
-			sprites[i].gpsX = obj.gpsX;
-			sprites[i].gpsY = obj.gpsY;
-			sprites[i].grAlt = obj.grAlt;
-			sprites[i].grCol = obj.grCol;
-			sprites[i].grLar = obj.grLar;
-			sprites[i].grLin = obj.grLin;
-			sprites[i].id = obj.id;
-			sprites[i].lar = obj.lar;
-			sprites[i].lin = obj.lin;
-			sprites[i].metaHorizontal = obj.metaHorizontal;
-			sprites[i].metaVertical = obj.metaVertical;
-			//sprites[i].movDown = obj.movDown;
-			//sprites[i].movLeft = obj.movLeft;
-			//sprites[i].movRight = obj.movRight;
-			//sprites[i].movUp = obj.movUp;
-			sprites[i].nFrames = obj.nFrames;
-			//sprites[i].posX = obj.gpsX;
-			//sprites[i].posY = obj.gpsY;
-			sprites[i].speed = obj.speed;
-			sprites[i].srcX = obj.srcX;
-			sprites[i].srcY = obj.srcY;
-			sprites[i].status = obj.status;
-			sprites[i].txFrequencia = obj.txFrequencia;
-			sprites[i].txt = obj.txt;
-			sprites[i].worldX = obj.worldX;
-			sprites[i].worldY = obj.worldY;			
-			//sprites[i] = playerOnline;//??????????????????
+		//atualiza player online no array de sprites...
+		if(sprites[i].id == obj.id){
+			//console.log('jogador online: '+ obj.gpsX +' , '+obj.gpsY);			
 			achou = true;
+			if(sprites[achar('player')].fase == obj.fase){
+				sprites[i].acima = true;
+				sprites[i].alt = obj.alt;
+				sprites[i].col = obj.col;
+				sprites[i].direcao = obj.direcao;
+				sprites[i].esc = obj.esc;
+				sprites[i].exibir = obj.exibir;
+				//sprites[i].flag = obj.flag;
+				sprites[i].fr = obj.fr;
+				sprites[i].frame = obj.frame;
+				sprites[i].gpsX = obj.gpsX;
+				sprites[i].gpsY = obj.gpsY;
+				sprites[i].grAlt = obj.grAlt;
+				sprites[i].grCol = obj.grCol;
+				sprites[i].grLar = obj.grLar;
+				sprites[i].grLin = obj.grLin;
+				//sprites[i].id = obj.id;
+				sprites[i].lar = obj.lar;
+				sprites[i].lin = obj.lin;
+				//sprites[i].metaHorizontal = obj.metaHorizontal;
+				//sprites[i].metaVertical = obj.metaVertical;
+				//sprites[i].movDown = obj.movDown;
+				//sprites[i].movLeft = obj.movLeft;
+				//sprites[i].movRight = obj.movRight;
+				//sprites[i].movUp = obj.movUp;
+				sprites[i].nFrames = obj.nFrames;
+				//sprites[i].posX = obj.gpsX;
+				//sprites[i].posY = obj.gpsY;
+				sprites[i].speed = obj.speed;
+				sprites[i].srcX = obj.srcX;
+				sprites[i].srcY = obj.srcY;
+				sprites[i].status = obj.status;
+				sprites[i].txFrequencia = obj.txFrequencia;
+				sprites[i].txt = obj.txt;
+				sprites[i].worldX = obj.worldX;
+				sprites[i].worldY = obj.worldY;	
+			}else{				
+				//remover do array de sprites
+				sprites.splice(i, 1);//splice(posição, n itens a serem removidos)
+			}
 		}
-	}	
-	if(!achou){
-		alert('inseriu jogador online no array');
+	}
+	//insere player online no array	
+	if(!achou && sprites[achar('player')].fase == obj.fase){
+		//alert('adicionado jogador online: '+ obj.id +' ...');
 		let playerOnline = new Npc('img/players.png', 12, 8, 'player');
 		playerOnline.alt = obj.alt;
 		playerOnline.col = obj.col;
@@ -1481,8 +1471,18 @@ socket.on('player', obj => {
 		playerOnline.txt = obj.txt;
 		playerOnline.worldX = obj.worldX;
 		playerOnline.worldY = obj.worldY;
+		playerOnline.fase = obj.fase;
 		sprites.push(playerOnline);
 		contImg++;
 		organizarSprites();
 	}
+})
+socket.on('desconectar', excArray =>{	
+	console.log('desconectar: '+excArray);
+	for (let i = 0 ; i < sprites.length; i++) {
+		if(sprites[i].id == excArray){
+			//alert('desconectar: '+excArray);
+			sprites.splice(i, 1);
+		}
+	}	
 })

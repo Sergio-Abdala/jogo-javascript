@@ -22,10 +22,19 @@ io.on('connection', socket => {
     //recebe dados do front
     socket.on('player', data => {
         //console.log(data);
+            data.id = socket.id;
             //envia dados para o front broadcast
             socket.broadcast.emit('player', data)
             // socket.broadcast.emit('respserver', obj)//emite para todos conectados a aplicação
     })    
+    /*socket.on('disconnect', function(e) {
+        console.log('desconectou id: ' + e)
+        socket.broadcast.emit('desconectar', e)
+    });*/
+    socket.on('disconnect', (reason) => {
+        console.log('reason => '+reason +' id: '+socket.id);
+        socket.broadcast.emit('desconectar', socket.id);
+      });
 })
 //sempre no final do arquivo
 server.listen(porta, () => {

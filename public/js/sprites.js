@@ -552,6 +552,12 @@ function bloqueando(p1, p2){//(personagem, objeto)
 				console.log('bateu cabeça: '+ p2.id);
 				if (p2.id == 'porta') {
 					console.log('entrou '+ p2.txt);
+					//aqui muda de fase....
+					if(p2.txt == 'predio azul 01'){
+						//alert('carregar fase 01');
+						console.log('===> ');
+						sprites[achar('player')].fase = 'fase01';						
+					}
 				}
 			} else {
 				p1.posY -= overlapy;
