@@ -1,4 +1,4 @@
-function Personagem(imgSrc, col, lin, flag){
+function Sprite(imgSrc, col, lin, flag){
 	//atributos.............................
 		this.img = new Image();
 		this.img.src = imgSrc;	
@@ -144,9 +144,8 @@ function Personagem(imgSrc, col, lin, flag){
 		//
 		if (this.flag == 'background') {//construindo efeito translação entre mapa e jogo
 			//ajusta tamanho de tela********************************
-				if (cnv.width < metaWidth) {//cresce a tela eixo X
-					//incrementar 50 ou 1
-					if (metaWidth - cnv.width > this.taxaAumenX) {
+				if (cnv.width < metaWidth) {//cresce a tela eixo X					//incrementar 50 ou 1
+					if (metaWidth - cnv.width >= this.taxaAumenX) {
 						cnv.width += this.taxaAumenX;
 					}else{
 						this.taxaAumenX /= 2;
@@ -154,7 +153,8 @@ function Personagem(imgSrc, col, lin, flag){
 				}				
 				//...........................................................
 				if (cnv.width > metaWidth) {//diminui a tela eixo X
-					if (cnv.width - metaWidth > this.taxaDimX) {
+					//console.log(this.taxaDimX);
+					if (cnv.width - metaWidth >= this.taxaDimX) {
 						cnv.width -= this.taxaDimX;
 					}else{
 						this.taxaDimX /= 2;
@@ -167,7 +167,7 @@ function Personagem(imgSrc, col, lin, flag){
 				}					
 				//..............................................................
 				if (cnv.height < metaHeight) {//aumenta tela eixo Y
-					if (metaHeight - cnv.height > this.taxaAumenY) {
+					if (metaHeight - cnv.height >= this.taxaAumenY) {
 						cnv.height+= this.taxaAumenY;
 					}else{
 						this.taxaAumenY /= 2;
@@ -175,7 +175,7 @@ function Personagem(imgSrc, col, lin, flag){
 				}				
 				//....................................................................
 				if (cnv.height > metaHeight) {//diminui no eixo Y
-					if (cnv.height - metaHeight > this.taxaDimY) {
+					if (cnv.height - metaHeight >= this.taxaDimY) {
 						cnv.height-= this.taxaDimY;
 					}else{
 						this.taxaDimY /= 2;
@@ -214,7 +214,9 @@ function Personagem(imgSrc, col, lin, flag){
 				//acelerador
 					let acelerador = 1;
 					if (sprites[achar('player')].posX - metaWidth*.75 >  this.srcX || sprites[achar('player')].posY - metaHeight*.75 >  this.srcY) {
-						acelerador = 5;
+						if(sprites == world){
+							acelerador = 5;
+						}						
 						//console.log('acelerar');
 					}
 				//
@@ -516,16 +518,16 @@ function Personagem(imgSrc, col, lin, flag){
 		}
 	}	
 }
-Personagem.prototype.metax = function(){
+Sprite.prototype.metax = function(){
 	return (this.lar) / 2;
 }
-Personagem.prototype.metay = function(){
+Sprite.prototype.metay = function(){
 	return (this.alt) / 2;
 }
-Personagem.prototype.meiox = function(){
+Sprite.prototype.meiox = function(){
 	return this.posX + this.metax();
 }
-Personagem.prototype.meioy = function(){
+Sprite.prototype.meioy = function(){
 	return this.posY + this.metay();
 }
 function bloqueando(p1, p2){//(personagem, objeto)
@@ -552,17 +554,18 @@ function bloqueando(p1, p2){//(personagem, objeto)
 				console.log('bateu cabeça: '+ p2.id);
 				if (p2.id == 'porta') {
 					console.log('entrou '+ p2.txt);
-					//aqui muda de fase....
-					if(p2.txt == 'predio azul 01'){
-						//alert('carregar fase 01');
-						console.log('===> ');
-						sprites[achar('player')].fase = 'fase01';						
-					}
+					//aqui muda de fase....					
+					sprites[achar('player')].fase = p2.txt;					
 				}
 			} else {
 				p1.posY -= overlapy;
 				//
 				console.log('esta pisando: '+ p2.id);
+				if (p2.id == 'porta') {
+					console.log('saiu '+ p2.txt);
+					//aqui muda de fase....					
+					sprites[achar('player')].fase = p2.txt;					
+				}
 			}
 		} else { // colisão pelos lados esquerda ou direita
 			this.metaHorizontal = this.metaVertical = null;

@@ -10,6 +10,7 @@
 	var player = null;
 	var mapa = new Array();
 	var fase01 = new Array();
+	var bordel = new Array();
 	var telaX = 1000;
 	var telaY = 450;
 	var metaWidth = telaX;//tamanho da tela de jogo width
@@ -19,8 +20,8 @@
 	var lider = lider01 = null;
 	var variacao = 0;
 	var iaX = iaY = iaLar = null;
-	//var memoSprite = 'world';
 	var objSpr = gpMorena = gpLoira = null;
+	var posXrua = posYrua = srcXtela = srcYtela = null;
 //************************************************************
 function start(){//carregou a pagina web...
 	console.log('start iniciado...');
@@ -32,7 +33,7 @@ function start(){//carregou a pagina web...
 		//background / mapa
 			world.push('mapa[0]');//string avisando que objeto deveria estar aqui....
 			ceu.push('mapa');
-			mapa.push(new Personagem('img/city.png', 1, 1, 'background'));
+			mapa.push(new Sprite('img/city.png', 1, 1, 'background'));
 			mapa[0].status = 'game';
 			mapa[0].id = 'world';
 			mapa[0].img.onload = function(){
@@ -92,6 +93,7 @@ function start(){//carregou a pagina web...
 						contImg++;
 					}
 				gpMorena = new Npc('img/player1.png', 3, 4, 'npc');
+					gpMorena.exibir = false;
 					gpMorena.id = 'gp-trampando';
 					gpMorena.esc = .75;
 					gpMorena.speed = .5;
@@ -135,6 +137,7 @@ function start(){//carregou a pagina web...
 						contImg++;
 					}
 				gpLoira = new Npc('img/player.png', 3, 4, 'npc');
+					gpLoira.exibir = false;
 					gpLoira.id = 'gp-trampando';
 					gpLoira.esc = .5;
 					gpLoira.speed = .5;
@@ -200,7 +203,7 @@ function start(){//carregou a pagina web...
 					}
 				/*/
 				let gpSobeDesce = new Npc('img/gp01.png', 3, 4, 'npc');
-					//gpSobeDesce.status = 'moveDown';
+					gpSobeDesce.exibir = false;
 					gpSobeDesce.id = 'gp-trampando';
 					gpSobeDesce.etc = 'esta aqui';
 					gpSobeDesce.speed = .5;
@@ -208,8 +211,6 @@ function start(){//carregou a pagina web...
 					gpSobeDesce.worldY = 520;
 					gpSobeDesce.metaHorizontal = 615;
 					gpSobeDesce.metaVertical = 570;
-					//gpSobeDesce.grCol = 2;
-					//gpSobeDesce.grLin = 1;
 					gpSobeDesce.nFrames = 3;
 					gpSobeDesce.txFrequencia = 20;
 					gpSobeDesce.direcao = 0;
@@ -227,12 +228,12 @@ function start(){//carregou a pagina web...
 		
 		//cidade
 			predio01(256, 223, 70);
-			predio02(384, 273, 70);
+			predio02(384, 273, 70, 'fase01');
 			predio03(640, 191, 70);
 			predio04(1279, 159, 70);
 			predio05(2431, 189, 80);
 			muro05(2368, 127);
-			predio02(642, 464, 70);
+			predio02(642, 464, 70, 'bordel');
 			//
 			arvore(93, 37);
 			arvore(-3, 293);
@@ -249,7 +250,7 @@ function start(){//carregou a pagina web...
 			baril(802, 512);
 			baril(802, 540);
 			//espectreman
-			let espectreman = new Personagem('img/spectreman.png', 1, 1, 'npc');
+			let espectreman = new Sprite('img/spectreman.png', 1, 1, 'npc');
 			espectreman.esc = .5;
 			espectreman.fr = 0;
 			espectreman.worldX = 430;
@@ -272,7 +273,7 @@ function start(){//carregou a pagina web...
 			passaros();
 			nuvem();
 			//
-			mileniunFalconRight = new Personagem('img/mileniunFalconRight.png', 1, 1, 'npc');
+			mileniunFalconRight = new Sprite('img/mileniunFalconRight.png', 1, 1, 'npc');
 				mileniunFalconRight.status = 'moveRight';
 				mileniunFalconRight.esc = .5;
 				mileniunFalconRight.fr = 0;
@@ -296,7 +297,7 @@ function start(){//carregou a pagina web...
 					ceu.push(mileniunFalconRight);
 					contCeu++;
 				}
-				mileniunFalconLeft = new Personagem('img/mileniunFalcon.png', 1, 1, 'npc');
+				mileniunFalconLeft = new Sprite('img/mileniunFalcon.png', 1, 1, 'npc');
 					mileniunFalconLeft.status = 'moveLeft';
 					mileniunFalconLeft.esc = .5;
 					mileniunFalconLeft.fr = 0;
@@ -321,7 +322,7 @@ function start(){//carregou a pagina web...
 						//contImg++;
 					}
 				//*************************************************************
-			jediRight = new Personagem('img/jediRight.png', 1, 1, 'npc');
+			jediRight = new Sprite('img/jediRight.png', 1, 1, 'npc');
 				jediRight.status = 'moveRightDown';
 				jediRight.esc = .5;
 				jediRight.fr = 0;
@@ -345,7 +346,7 @@ function start(){//carregou a pagina web...
 					ceu.push(jediRight);
 					contCeu++;
 				}
-				jediLeft = new Personagem('img/jediLeft.png', 1, 1, 'npc');
+				jediLeft = new Sprite('img/jediLeft.png', 1, 1, 'npc');
 				jediLeft.status = 'moveLeftDown';
 				jediLeft.esc = .5;
 				jediLeft.fr = 0;
@@ -370,7 +371,7 @@ function start(){//carregou a pagina web...
 					//contImg++;
 				}
 			//npc ovni spriteSheet linha
-			let objOvni = new Personagem('img/ovni.png', 3, 1, 'npc');
+			let objOvni = new Sprite('img/ovni.png', 3, 1, 'npc');
 				objOvni.status = 'moveRight';
 				objOvni.esc = 1;
 				objOvni.speed = Math.floor((Math.random() * 30) + 1);
@@ -392,7 +393,7 @@ function start(){//carregou a pagina web...
 					contCeu++;
 				}
 		//botões na tela
-			let btn = new Personagem('img/worldIcone.png', 1, 1, 'txt');
+			let btn = new Sprite('img/worldIcone.png', 1, 1, 'txt');
 			btn.status = 'fixo';
 			btn.id = 'btn';	
 			btn.etc = 'up-right';
@@ -409,7 +410,7 @@ function start(){//carregou a pagina web...
 				//ceu.push(btn);
 				//contCeu++;
 			}
-			let btn2 = new Personagem('img/btnMapa2.png', 1, 1, 'txt');
+			let btn2 = new Sprite('img/btnMapa2.png', 1, 1, 'txt');
 			btn2.status = 'fixo';
 			btn2.id = 'btn';	
 			btn2.etc = 'up-right';
@@ -439,9 +440,9 @@ function start(){//carregou a pagina web...
 			ceu.push(texto2);contCeu++;
 
 	//*************************************************************************************
-	//fase 1 ******************************************************************************
+	//fase01******************************************************************************
 		//
-		fase01.push(new Personagem('img/background2.jpg', 1, 1, 'background'));
+		fase01.push(new Sprite('img/background2.jpg', 1, 1, 'background'));
 		fase01[0].status = 'game';
 		fase01[0].id = 'fase01';
 		fase01[0].img.onload = function(){
@@ -450,7 +451,46 @@ function start(){//carregou a pagina web...
 			fase01[0].alt = (fase01[0].img.height / fase01[0].lin) * fase01[0].esc;				
 		}
 		fase01.push(player);
-	//*************************************************************************************
+		//porta fase01
+		let ptr = new Sprite('img/background2.jpg', 1, 1, 'npc')			
+		ptr.fr = 0;
+		ptr.status = 'fixo';
+		ptr.srcX = 460;//258;
+		ptr.srcY = 425;//323;
+		ptr.lar = 50;//250;
+		ptr.alt = 1;
+		ptr.worldX = 460;//150;//objSpr.srcX;
+		ptr.worldY = ptr.srcY;//150;//objSpr.srcY;
+		ptr.acima = false;
+		ptr.id = 'porta';
+		ptr.txt = 'world';
+		fase01.push(ptr);
+		fase01.push(texto1);
+	//bordel*************************************************************************************
+		bordel.push(new Sprite('img/bordel.png', 1, 1, 'background'));
+		bordel[0].status = 'game';
+		bordel[0].id = 'bordel';
+		bordel[0].img.onload = function(){
+			//esta medida so pode ser setada depois da imagem carregada............
+			bordel[0].lar = (bordel[0].img.width / bordel[0].col);// * bordel[0].esc;
+			bordel[0].alt = (bordel[0].img.height / bordel[0].lin);// * bordel[0].esc;
+		}		
+		bordel.push(player);
+		ptr = new Sprite('img/bordel.png', 1, 1, 'npc')			
+		ptr.fr = 0;
+		ptr.status = 'fixo';
+		ptr.srcX = 90;//258;
+		ptr.srcY = 620;//323;
+		ptr.lar = 100;//250;
+		ptr.alt = 1;
+		ptr.worldX = ptr.srcX;//150;//objSpr.srcX;
+		ptr.worldY = ptr.srcY;//150;//objSpr.srcY;
+		ptr.acima = false;
+		ptr.id = 'porta';
+		ptr.txt = 'world';
+		bordel.push(ptr);		
+		bordel.push(texto1);
+	//*****************************************************************************************
 
 	loading();
 }
@@ -534,7 +574,7 @@ function nuvem(){
 	//nuvem 	move-se com posX e posY pois so aparece na tela grande
 	 let velocidade = Math.floor((Math.random() * 10)+1);// tem a ver com velocidade da nuvem
 	for (let i = 0; i < Math.floor((Math.random() * 30) + 1); i++) {
-		let nuvem = new Personagem('img/cloud.png', 1, 1, 'nuvem');
+		let nuvem = new Sprite('img/cloud.png', 1, 1, 'nuvem');
 		nuvem.status = 'oculto';
 		nuvem.esc = 1;
 		nuvem.speed = 2;
@@ -555,7 +595,7 @@ function nuvem(){
 }
 function passaros(){
 	let srcImg = 'img/passaros02	.png';
-	let piu = new Personagem(srcImg, 3, 4, 'npc');
+	let piu = new Sprite(srcImg, 3, 4, 'npc');
 		piu.id = 'ovni';
 		piu.status = 'moveRight';
 		piu.etc = 'lider';
@@ -580,7 +620,7 @@ function passaros(){
 			contCeu++;
 		}
 	for (let i = 15; i > 0; i--) {
-		let piUp = new Personagem(srcImg, 3, 4, 'npc');
+		let piUp = new Sprite(srcImg, 3, 4, 'npc');
 			piUp.id = 'ovni';
 			//piUp.status = 'moveRight';
 			piUp.etc = 'segueLider';
@@ -603,7 +643,7 @@ function passaros(){
 				//console.log('passaro 01 ==> '+world.indexOf(piUp));
 				contCeu++;
 			}
-		let piuDown = new Personagem(srcImg, 3, 4, 'npc');
+		let piuDown = new Sprite(srcImg, 3, 4, 'npc');
 		piuDown.id = 'ovni';
 		//piuDown.status = 'moveRight';
 		piuDown.etc = 'segueLider';
@@ -633,7 +673,7 @@ function loadSprites(src, col, lin, flag, status){
 	if (flag == 'txt') {
 		sprites.push(new Texto('00', lin, col, status));
 	}else{
-		sprites.push(new Personagem(src, col, lin, flag));
+		sprites.push(new Sprite(src, col, lin, flag));
 		let indce = sprites.length - 1;
 		//console.log('col ==>'+ sprites[indce].col +' lar ==>'+ sprites[indce].lar);
 		sprites[indce].status = status;
@@ -651,7 +691,7 @@ function loadSprites(src, col, lin, flag, status){
 }
 function arvore(x, y){
 	//arvore
-		world.push(new Personagem('img/forest1.png', 1, 1, 'npc'));//copa da arvore e tronco da são de imagens diferentes por isto ñ é posivel proporcionar suas posições
+		world.push(new Sprite('img/forest1.png', 1, 1, 'npc'));//copa da arvore e tronco da são de imagens diferentes por isto ñ é posivel proporcionar suas posições
 			world[world.length-1].txt = 'nocaoProfundidade';
 			world[world.length-1].fr = 0;
 			world[world.length - 1].status = 'fixo';
@@ -665,7 +705,7 @@ function arvore(x, y){
 			world[world.length-1].deslocaY = 50;
 			world[world.length-1].id = 'copa da árvore'
 			contImg++;
-		world.push(new Personagem('img/city.png', 1, 1,'npc'));//tronco arvore 0.0 alterna
+		world.push(new Sprite('img/city.png', 1, 1,'npc'));//tronco arvore 0.0 alterna
 			world[world.length-1].txt = 'nocaoProfundidade';
 			world[world.length-1].fr = 0;
 			world[world.length - 1].status = 'fixo';
@@ -677,7 +717,7 @@ function arvore(x, y){
 			world[world.length-1].worldY = world[world.length-1].srcY;
 			world[world.length-1].acima = true;
 			contImg++;
-		world.push(new Personagem('img/city.png', 1, 1,'npc'));//tronco arvore 0.1 bloqueia
+		world.push(new Sprite('img/city.png', 1, 1,'npc'));//tronco arvore 0.1 bloqueia
 			world[world.length-1].txt = 'nocaoProfundidade';
 			world[world.length-1].fr = 0;
 			world[world.length - 1].status = 'fixo';
@@ -693,7 +733,7 @@ function arvore(x, y){
 	//
 }
 function tronco(x, y){
-	world.push(new Personagem('img/city.png', 1, 1,'npc'));//tronco arvore 0.0 alterna
+	world.push(new Sprite('img/city.png', 1, 1,'npc'));//tronco arvore 0.0 alterna
 		world[world.length-1].txt = 'nocaoProfundidade';
 		world[world.length-1].fr = 0;
 		world[world.length - 1].status = 'fixo';
@@ -705,7 +745,7 @@ function tronco(x, y){
 		world[world.length-1].worldY = world[world.length-1].srcY;
 		world[world.length-1].acima = true;//???????????????????????????????????
 		contImg++;
-	world.push(new Personagem('img/city.png', 1, 1,'npc'));//tronco arvore 0.1 bloqueia
+	world.push(new Sprite('img/city.png', 1, 1,'npc'));//tronco arvore 0.1 bloqueia
 		world[world.length-1].txt = 'nocaoProfundidade';
 		world[world.length-1].fr = 0;
 		world[world.length - 1].status = 'fixo';
@@ -720,7 +760,7 @@ function tronco(x, y){
 		contImg++;
 }
 function baril(x, y){
-	world.push(new Personagem('img/city.png', 1, 1,'npc'));//pedra 0.0 alterna
+	world.push(new Sprite('img/city.png', 1, 1,'npc'));//pedra 0.0 alterna
 	world[world.length-1].txt = 'nocaoProfundidade';
 	world[world.length-1].fr = 0;
 	world[world.length - 1].status = 'fixo';
@@ -733,7 +773,7 @@ function baril(x, y){
 	world[world.length-1].acima = true;//???????????????????????????????????
 	world[world.length-1].id = 'baril';
 	contImg++;
-	world.push(new Personagem('img/city.png', 1, 1,'npc'));//pedra 0.1 bloqueia
+	world.push(new Sprite('img/city.png', 1, 1,'npc'));//pedra 0.1 bloqueia
 	world[world.length-1].txt = 'nocaoProfundidade';
 	world[world.length-1].fr = 0;
 	world[world.length - 1].status = 'fixo';
@@ -748,7 +788,7 @@ function baril(x, y){
 	contImg++;
 }
 function pedra(x, y){
-	world.push(new Personagem('img/city.png', 1, 1,'npc'));//pedra 0.0 alterna
+	world.push(new Sprite('img/city.png', 1, 1,'npc'));//pedra 0.0 alterna
 		world[world.length-1].txt = 'nocaoProfundidade';
 		world[world.length-1].fr = 0;
 		world[world.length - 1].status = 'fixo';
@@ -760,7 +800,7 @@ function pedra(x, y){
 		world[world.length-1].worldY = world[world.length-1].srcY;
 		world[world.length-1].acima = true;//???????????????????????????????????
 		contImg++;
-	world.push(new Personagem('img/city.png', 1, 1,'npc'));//pedra 0.1 bloqueia
+	world.push(new Sprite('img/city.png', 1, 1,'npc'));//pedra 0.1 bloqueia
 		world[world.length-1].txt = 'nocaoProfundidade';
 		world[world.length-1].fr = 0;
 		world[world.length - 1].status = 'fixo';
@@ -775,7 +815,7 @@ function pedra(x, y){
 		contImg++;
 }
 function moita(x, y){
-	world.push(new Personagem('img/forest1.png', 1, 1, 'npc'));//moita de imagen diferente por isto ñ é diferente suas posições de src e world
+	world.push(new Sprite('img/forest1.png', 1, 1, 'npc'));//moita de imagen diferente por isto ñ é diferente suas posições de src e world
 			world[world.length-1].txt = 'nocaoProfundidade';
 			world[world.length-1].fr = 0;
 			world[world.length - 1].status = 'fixo';
@@ -791,7 +831,7 @@ function moita(x, y){
 			contImg++;	
 }
 function moitinha(x, y){
-	world.push(new Personagem('img/moitinha.png', 1, 1, 'npc'));//moitinha de imagen diferente por isto ñ é diferente suas posições de src e world
+	world.push(new Sprite('img/moitinha.png', 1, 1, 'npc'));//moitinha de imagen diferente por isto ñ é diferente suas posições de src e world
 			world[world.length-1].txt = 'nocaoProfundidade';
 			world[world.length-1].fr = 0;
 			world[world.length - 1].status = 'fixo';
@@ -809,7 +849,7 @@ function moitinha(x, y){
 function predio01(x, y, tamanhoPorta){
 	//predio azul 01...
 		let memoIndex = memoIndexx = null;
-		objSpr = new Personagem('img/city.png', 1, 1, 'npc');			
+		objSpr = new Sprite('img/city.png', 1, 1, 'npc');			
 				objSpr.fr = 0;
 				objSpr.status = 'fixo';
 				objSpr.srcX = x;//256;
@@ -824,7 +864,7 @@ function predio01(x, y, tamanhoPorta){
 				world.push(objSpr);//predio azul parte de cima 2 andar parede intangivel
 				memoIndex = world.indexOf(objSpr);
 				contImg++;	
-			objSpr = new Personagem('img/city.png', 1, 1, 'npc');			
+			objSpr = new Sprite('img/city.png', 1, 1, 'npc');			
 				objSpr.fr = 0;
 				objSpr.status = 'fixo';
 				objSpr.srcX = world[memoIndex].srcX;
@@ -842,7 +882,7 @@ function predio01(x, y, tamanhoPorta){
 				memoIndex = world.indexOf(objSpr);
 				//console.log('parede solida esquerda: '+ objSpr.worldX +' , '+ objSpr.worldY +' , '+ memoIndex);
 				contImg++;
-			objSpr = new Personagem('img/city.png', 1, 1, 'npc')			
+			objSpr = new Sprite('img/city.png', 1, 1, 'npc')			
 				objSpr.fr = 0;
 				objSpr.status = 'fixo';
 				objSpr.srcX = world[memoIndex].srcX;//258;
@@ -853,13 +893,30 @@ function predio01(x, y, tamanhoPorta){
 				objSpr.worldY = world[memoIndex].worldY;//150;//objSpr.srcY;
 				objSpr.acima = false;
 				objSpr.id = 'porta';
-				objSpr.txt = 'predio azul 01';
+				objSpr.txt = 'fase01';
 				//
 				memoIndexx = memoIndex;
 				world.push(objSpr);//limite acima da porta
 				memoIndex = world.indexOf(objSpr);
 				contImg++;
-			objSpr = new Personagem('img/city.png', 1, 1, 'npc')			
+			objSpr = new Sprite('img/city.png', 1, 1, 'npc')			
+				objSpr.fr = 0;
+				objSpr.status = 'fixo';
+				objSpr.srcX = world[memoIndex].srcX;//258;
+				objSpr.srcY = world[memoIndex].srcY-3;//323;
+				objSpr.lar = 128;//250;
+				objSpr.alt = 3;
+				objSpr.worldX = world[memoIndex].worldX;//150;//objSpr.srcX;
+				objSpr.worldY = world[memoIndex].worldY-3;//150;//objSpr.srcY;
+				objSpr.acima = false;
+				objSpr.id = 'predio';
+				objSpr.txt = null;
+				//
+				//memoIndexx = memoIndex;
+				world.push(objSpr);//limite acima da porta
+				//memoIndex = world.indexOf(objSpr);
+				contImg++;
+			objSpr = new Sprite('img/city.png', 1, 1, 'npc')			
 				objSpr.fr = 0;
 				objSpr.status = 'fixo';
 				objSpr.srcX = world[memoIndex].srcX + tamanhoPorta;
@@ -877,7 +934,7 @@ function predio01(x, y, tamanhoPorta){
 				contImg++;
 			/*/predio azul parte de baixo 1 andar terreo... 
 			//Obs: esta parte precisa ficar abaixo do player na pilha de world ou estar desenhada no bacground / mapa
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//parede intangivel
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//parede intangivel
 				objSpr.fr = 0;
 				objSpr.status = 'fixo';
 				objSpr.srcX = world[memoIndexx].srcX;//256;
@@ -890,10 +947,10 @@ function predio01(x, y, tamanhoPorta){
 				objSpr.id = 'predio';
 				contImg++;*/
 }
-function predio02(x, y, tamanhoPorta){
+function predio02(x, y, tamanhoPorta, portaLeva){
 	//predio amarelo 02...
 		let memoIndex = memoIndexx = null;
-		objSpr = new Personagem('img/city.png', 1, 1, 'npc');		
+		objSpr = new Sprite('img/city.png', 1, 1, 'npc');		
 				objSpr.fr = 0;
 				objSpr.status = 'fixo';
 				objSpr.srcX = x;//384;
@@ -907,7 +964,7 @@ function predio02(x, y, tamanhoPorta){
 				world.push(objSpr);//predio parte de cima 2 andar parede intangivel
 				memoIndex = world.indexOf(objSpr);
 				contImg++;	
-		objSpr = new Personagem('img/city.png', 1, 1, 'npc');			
+		objSpr = new Sprite('img/city.png', 1, 1, 'npc');			
 				objSpr.fr = 0;
 				objSpr.status = 'fixo';
 				objSpr.srcX = world[memoIndex].srcX;
@@ -922,28 +979,44 @@ function predio02(x, y, tamanhoPorta){
 				memoIndexx = memoIndex;
 				memoIndex = world.indexOf(objSpr);
 				contImg++;
-		objSpr = new Personagem('img/city.png', 1, 1, 'npc');//limite acima da porta
+		objSpr = new Sprite('img/city.png', 1, 1, 'npc');//limite acima da porta
 				objSpr.fr = 0;
 				objSpr.status = 'fixo';
 				objSpr.srcX = world[memoIndex].srcX;//258;
-				objSpr.srcY = world[memoIndex].srcY - world[memoIndexx].alt/2;//323;
+				objSpr.srcY = world[memoIndex].srcY - world[memoIndexx].alt/2 + 7;//323;
+				objSpr.lar = 128;
+				objSpr.alt = 3;
+				objSpr.worldX = world[memoIndex].worldX;//150;//objSpr.srcX;
+				objSpr.worldY = world[memoIndex].worldY - world[memoIndexx].alt/2 + 7;//150;//objSpr.srcY;
+				objSpr.acima = false;
+				objSpr.id = 'predio';
+				objSpr.txt = portaLeva;
+				world.push(objSpr);
+				//memoIndexx = memoIndex;
+				//memoIndex = world.indexOf(objSpr);
+				contImg++;	
+		objSpr = new Sprite('img/city.png', 1, 1, 'npc');//limite acima da porta
+				objSpr.fr = 0;
+				objSpr.status = 'fixo';
+				objSpr.srcX = world[memoIndex].srcX;//258;
+				objSpr.srcY = world[memoIndex].srcY - world[memoIndexx].alt/2 + 10;//323;
 				objSpr.lar = world[memoIndexx].lar;//250;
 				objSpr.alt = 1;
 				objSpr.worldX = world[memoIndex].worldX;//150;//objSpr.srcX;
-				objSpr.worldY = world[memoIndex].worldY - world[memoIndexx].alt/2;//150;//objSpr.srcY;
+				objSpr.worldY = world[memoIndex].worldY - world[memoIndexx].alt/2 + 10;//150;//objSpr.srcY;
 				objSpr.acima = false;
 				objSpr.id = 'porta';
-				objSpr.txt = 'porta do predio azul';
+				objSpr.txt = portaLeva;
 				world.push(objSpr);
 				memoIndexx = memoIndex;
 				memoIndex = world.indexOf(objSpr);
-				contImg++;	
-		objSpr = new Personagem('img/city.png', 1, 1, 'npc');//limite amarelo
+				contImg++;
+		objSpr = new Sprite('img/city.png', 1, 1, 'npc');//limite amarelo
 				objSpr.fr = 0;
 				objSpr.status = 'fixo';
 				//console.log('===> '+world[memoIndex].srcX);
 				objSpr.srcX = world[memoIndex].srcX + tamanhoPorta;
-				objSpr.srcY = world[memoIndex].srcY + 15;
+				objSpr.srcY = world[memoIndex].srcY;
 				objSpr.lar = 50;
 				objSpr.alt = 30;
 				objSpr.worldX = objSpr.srcX;
@@ -957,7 +1030,7 @@ function predio02(x, y, tamanhoPorta){
 }
 function predio03(x, y, tamanhoPorta){
 	//predio azul 03...
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//predio azul parte de cima 2 andar parede intangivel
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//predio azul parte de cima 2 andar parede intangivel
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = x;//primeira parte do teto
@@ -969,7 +1042,7 @@ function predio03(x, y, tamanhoPorta){
 				world[world.length-1].acima = true;
 				world[world.length-1].id = 'predio';
 				contImg++;
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//predio azul parte de cima 2 andar parede intangivel
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//predio azul parte de cima 2 andar parede intangivel
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX + world[world.length-2].lar;//segunda parte do teto
@@ -981,7 +1054,7 @@ function predio03(x, y, tamanhoPorta){
 				world[world.length-1].acima = true;
 				world[world.length-1].id = 'predio';
 				contImg++;
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//parede solida esquerda
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//parede solida esquerda
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-3].srcX;
@@ -994,7 +1067,7 @@ function predio03(x, y, tamanhoPorta){
 				world[world.length-1].id = 'predio';
 				contImg++;
 			//tamanhoPorta = 70;
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//limite acima da porta
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//limite acima da porta
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX;//258;
@@ -1005,9 +1078,9 @@ function predio03(x, y, tamanhoPorta){
 				world[world.length-1].worldY = world[world.length-2].worldY;//150;//world[world.length-1].srcY;
 				world[world.length-1].acima = false;
 				world[world.length-1].id = 'porta';
-				world[world.length-1].txt = 'porta do predio azul';
+				world[world.length-1].txt = 'fase01';
 				contImg++;
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//parede solida direita
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//parede solida direita
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX + tamanhoPorta;
@@ -1021,7 +1094,7 @@ function predio03(x, y, tamanhoPorta){
 				contImg++;
 			//predio azul parte de baixo 1 andar terreo... 
 			//Obs: esta parte precisa ficar abaixo do player na pilha de world ou estar desenhada no bacground / mapa
-			/*world.push(new Personagem('img/city.png', 1, 1, 'npc'));//parede intangivel
+			/*world.push(new Sprite('img/city.png', 1, 1, 'npc'));//parede intangivel
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-3].srcX;//256;
@@ -1037,7 +1110,7 @@ function predio03(x, y, tamanhoPorta){
 }
 function predio04(x, y, tamanhoPorta){
 	//predio azul 04...
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//predio parte de cima 2 andar parede intangivel
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//predio parte de cima 2 andar parede intangivel
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = x;//1279;
@@ -1049,7 +1122,7 @@ function predio04(x, y, tamanhoPorta){
 				world[world.length-1].acima = true;
 				world[world.length-1].id = 'predio';
 				contImg++;	
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//parede solida esquerda
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//parede solida esquerda
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX;
@@ -1062,7 +1135,7 @@ function predio04(x, y, tamanhoPorta){
 				world[world.length-1].id = 'parede solida';
 				contImg++;
 			tamanhoPorta = 80;
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//limite acima da porta
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//limite acima da porta
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX;//258;
@@ -1073,9 +1146,9 @@ function predio04(x, y, tamanhoPorta){
 				world[world.length-1].worldY = world[world.length-2].worldY;//150;//world[world.length-1].srcY;
 				world[world.length-1].acima = false;
 				world[world.length-1].id = 'porta';
-				world[world.length-1].txt = 'porta do predio azul';
+				world[world.length-1].txt = 'fase01';
 				contImg++;
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//parede solida direita
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//parede solida direita
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX + tamanhoPorta*2;
@@ -1089,7 +1162,7 @@ function predio04(x, y, tamanhoPorta){
 				contImg++;
 			//predio azul parte de baixo 1 andar terreo... 
 			//Obs: esta parte precisa ficar abaixo do player na pilha de world ou estar desenhada no bacground / mapa
-			/*world.push(new Personagem('img/city.png', 1, 1, 'npc'));//parede intangivel
+			/*world.push(new Sprite('img/city.png', 1, 1, 'npc'));//parede intangivel
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-4].srcX;//256;
@@ -1105,7 +1178,7 @@ function predio04(x, y, tamanhoPorta){
 }
 function predio05(x, y, tamanhoPorta){
 	//predio azul 05...
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//predio parte de cima 2 andar parede intangivel
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//predio parte de cima 2 andar parede intangivel
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = x;//2431;
@@ -1118,7 +1191,7 @@ function predio05(x, y, tamanhoPorta){
 				world[world.length-1].id = 'predio';
 				contImg++;	
 				//console.log('worldX: '+ world[world.length-1].worldX + ' , worldY: '+ world[world.length-1].worldY);
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//parede solida full largY;
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//parede solida full largY;
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX;
@@ -1131,7 +1204,7 @@ function predio05(x, y, tamanhoPorta){
 				world[world.length-1].id = 'predio';
 				contImg++;
 				//console.log('worldX: '+ world[world.length-1].worldX + ' , worldY: '+ world[world.length-1].worldY);
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//telhado 2
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//telhado 2
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX + 128;
@@ -1144,7 +1217,7 @@ function predio05(x, y, tamanhoPorta){
 				world[world.length-1].id = 'predio';
 				contImg++;
 				//console.log('worldX: '+ world[world.length-1].worldX + ' , worldY: '+ world[world.length-1].worldY);
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//parede solida esquerda
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//parede solida esquerda
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-3].srcX + 128;
@@ -1158,7 +1231,7 @@ function predio05(x, y, tamanhoPorta){
 				contImg++;
 				//console.log('worldX: '+ world[world.length-1].worldX + ' , worldY: '+ world[world.length-1].worldY);
 			//tamanhoPorta = 80;
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//limite acima da porta
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//limite acima da porta
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX;//258;
@@ -1169,10 +1242,10 @@ function predio05(x, y, tamanhoPorta){
 				world[world.length-1].worldY = world[world.length-2].worldY;//150;//world[world.length-1].srcY;
 				world[world.length-1].acima = false;
 				world[world.length-1].id = 'porta';
-				world[world.length-1].txt = 'porta do predio azul';
+				world[world.length-1].txt = 'fase01';
 				contImg++;
 				//console.log('worldX: '+ world[world.length-1].worldX + ' , worldY: '+ world[world.length-1].worldY);
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//parede solida a direita
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//parede solida a direita
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-3].srcX + world[world.length-3].lar + tamanhoPorta;
@@ -1190,7 +1263,7 @@ function predio05(x, y, tamanhoPorta){
 function muro05(x, y){
 	//muro do predio acima...
 			//console.log('muro');
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//muro parte de cima intangivel
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//muro parte de cima intangivel
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = x;//2368;
@@ -1203,7 +1276,7 @@ function muro05(x, y){
 				world[world.length-1].id = 'muro';
 				contImg++;
 				//console.log('worldX: '+ world[world.length-1].worldX + ' , worldY: '+ world[world.length-1].worldY);
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//parede solida full largura de cima do muro
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//parede solida full largura de cima do muro
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX;
@@ -1216,7 +1289,7 @@ function muro05(x, y){
 				world[world.length-1].id = 'muro';
 				contImg++;
 				//console.log('worldX: '+ world[world.length-1].worldX + ' , worldY: '+ world[world.length-1].worldY);
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//parede solida full largura esquerda
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//parede solida full largura esquerda
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX;
@@ -1229,7 +1302,7 @@ function muro05(x, y){
 				world[world.length-1].id = 'muro';
 				contImg++;
 				//console.log('worldX: '+ world[world.length-1].worldX + ' , worldY: '+ world[world.length-1].worldY);
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//parede solida full largura direita
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//parede solida full largura direita
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-3].srcX + world[world.length-3].lar - world[world.length-2].lar;
@@ -1242,7 +1315,7 @@ function muro05(x, y){
 				world[world.length-1].id = 'muro';
 				contImg++;
 				//console.log('worldX: '+ world[world.length-1].worldX + ' , worldY: '+ world[world.length-1].worldY);
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//muro solido horizontal esquerda entrada
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//muro solido horizontal esquerda entrada
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-3].srcX + world[world.length-3].lar;
@@ -1255,7 +1328,7 @@ function muro05(x, y){
 				world[world.length-1].id = 'muro';
 				contImg++;
 				//console.log('worldX: '+ world[world.length-1].worldX + ' , worldY: '+ world[world.length-1].worldY);
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//muro solido horizontal direita entrada
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//muro solido horizontal direita entrada
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX + world[world.length-2].lar + 130;
@@ -1268,7 +1341,7 @@ function muro05(x, y){
 				world[world.length-1].id = 'muro';
 				contImg++;
 				//console.log('worldX: '+ world[world.length-1].worldX + ' , worldY: '+ world[world.length-1].worldY);
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//muro solido vertical direita entrada
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//muro solido vertical direita entrada
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX;
@@ -1281,7 +1354,7 @@ function muro05(x, y){
 				world[world.length-1].id = 'muro';
 				contImg++;
 				//console.log('worldX: '+ world[world.length-1].worldX + ' , worldY: '+ world[world.length-1].worldY);
-			world.push(new Personagem('img/city.png', 1, 1, 'npc'));//muro solido vertical esquerda entrada
+			world.push(new Sprite('img/city.png', 1, 1, 'npc'));//muro solido vertical esquerda entrada
 				world[world.length-1].fr = 0;
 				world[world.length - 1].status = 'fixo';
 				world[world.length-1].srcX = world[world.length-2].srcX - 165;
@@ -1320,17 +1393,53 @@ function achar(flag, status){
 	}
 }
 function loop(){
-	// limpar tela
-	ctx.clearRect(0,0,cnv.width,cnv.height);
-	if (sprites[achar('player')].fase == 'world') {
+	if (sprites[achar('player')].fase == 'world' && sprites !== world) {
 		sprites = world;
+		sprites[achar('background')].srcX = srcXtela;
+		sprites[achar('background')].srcY = srcYtela;
+		sprites[achar('player')].posX = posXrua;
+		sprites[achar('player')].posY = posYrua + sprites[achar('player')].alt;
+		sprites[achar('background')].taxaAumenX = 64;
+		sprites[achar('background')].taxaAumenY = 64;
+		sprites[achar('background')].taxaDimX = 64;
+		sprites[achar('background')].taxaDimY = 64;
+		metaWidth = telaX;
+		metaHeight = telaY;
+		//
 	}
-	if (sprites[achar('player')].fase == 'ceu') {
+	if (sprites[achar('player')].fase == 'ceu' && sprites !== ceu) {
 		sprites = ceu;
 	}
-	if (sprites[achar('player')].fase == 'fase01') {
+	if (sprites[achar('player')].fase == 'fase01' && sprites !== fase01) {
+		srcXtela = sprites[achar('background')].srcX;
+		srcYtela = sprites[achar('background')].srcY;
+		posXrua = sprites[achar('player')].posX;
+		posYrua = sprites[achar('player')].posY;
 		sprites = fase01;
+		sprites[achar('background')].srcY = 100;
+		sprites[achar('background')].taxaDimX = 64;
+		metaWidth = sprites[achar('background')].img.width;
+		sprites[achar('background')].taxaDimY = 64;
+		metaHeight = sprites[achar('background')].img.height - 100;
+		sprites[achar('player')].posX = 465;
+		sprites[achar('player')].posY = 280;
 	}
+	if (sprites[achar('player')].fase == 'bordel' && sprites !== bordel) {
+		srcXtela = sprites[achar('background')].srcX;
+		srcYtela = sprites[achar('background')].srcY;
+		posXrua = sprites[achar('player')].posX;
+		posYrua = sprites[achar('player')].posY;
+		sprites = bordel;
+		sprites[achar('background')].srcY = sprites[achar('background')].img.height - cnv.height;
+		sprites[achar('background')].taxaDimX = 64;
+		metaWidth = sprites[achar('background')].img.width;
+		//cnv.height = sprites[achar('background')].img.height;
+		sprites[achar('player')].posX = 140;
+		sprites[achar('player')].posY = cnv.height - sprites[achar('player')].alt*2;
+		
+	}
+	// limpar tela
+	ctx.clearRect(0,0,cnv.width,cnv.height);
 	for (let i = 0 ; i < sprites.length; i++) {//percorre array de sprites
 		
 		if(sprites[i].flag == 'player'){
